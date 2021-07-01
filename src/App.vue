@@ -1,32 +1,55 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+  <div class="app">
+    <Main/>
+    <Loader v-if="loader.show"/>
+    <Basket v-if="basket.show"/>
   </div>
 </template>
 
+<script>
+  import { mapGetters } from 'vuex'
+  const Main = () => import('./views/Main')
+  const Loader = () => import('./components/Loader')
+  const Basket = () => import('./components/Basket')
+
+
+  export default {
+    name:'App',
+    components:{
+      Main,Loader,Basket
+    },
+    computed:{
+      ...mapGetters(['basket','loader'])
+    },
+    watch:{
+      basket:{
+        handler(basket){
+          if (basket.show) document.body.style.overflow = 'hidden';
+          else document.body.style.overflow = 'visible';
+        },
+        deep:true
+      },
+    },
+  }
+</script>
+
+
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+  }
+  body::-webkit-scrollbar { width: 0; }
+</style>
 
-#nav {
-  padding: 30px;
-}
+<style scoped>
+  .app {
+    min-height: 100vh;
+    background: #E7F6FF;
+    padding-top: 85px;
+  }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>

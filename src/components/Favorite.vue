@@ -35,7 +35,9 @@
         alt="purchases"
       />
       <h3 class="no-purchases-title">У вас нет избранных товаров</h3>
-      <p class="no-purchases-desctiption">Нажмите на лайк хотя бы на одном из них!</p>
+      <p class="no-purchases-desctiption">
+        Нажмите на лайк хотя бы на одном из них!
+      </p>
       <button @click="$router.go(-1)" class="btn order-btn">
         <svg
           width="16"

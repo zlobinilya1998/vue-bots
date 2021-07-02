@@ -5,7 +5,7 @@
       <div class="logo-title-wrapper">
         <h3
           :style="{
-            color: $route.path === '/shop' ? '#9DD458' : 'black',
+            color: $route.path === '/' ? '#9DD458' : 'black',
             transition: 'all .3s',
           }"
         >

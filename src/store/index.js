@@ -16,6 +16,7 @@ export default new Vuex.Store({
       notification: {
         show: false,
         text: null,
+        type:'danger',
       },
       loader: {
         show: false,

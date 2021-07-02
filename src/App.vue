@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <Main v-if="user" />
+    <Main v-if="user"/>
     <Auth v-else />
     <Modals />
   </div>
@@ -56,6 +56,7 @@ body::-webkit-scrollbar {
   color: #ffffff;
   cursor: pointer;
   transition: all 0.3s;
+  font-size: 21px;
 }
 .btn:hover {
   box-shadow: 3px 3px 22px -12px rgba(34, 60, 80, 0.8);

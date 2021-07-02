@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Header />
+    <Header/>
     <div class="content">
       <transition name="router" appear mode="out-in">
         <router-view />

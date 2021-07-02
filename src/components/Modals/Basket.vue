@@ -194,10 +194,6 @@ export default {
   background: #ffffff;
   padding: 30px;
 }
-.cart-animation {
-  transform: translateX(0);
-  opacity: 1;
-}
 .cart-title {
   padding-bottom: 15px;
   border-bottom: 0.5px solid rgba(128, 128, 128, 0.3);
@@ -246,35 +242,19 @@ export default {
   align-items: center;
   position: relative;
   transition: all 0.4s;
+  cursor: pointer;
 }
 .delete-btn path,
 rect {
   transition: all 0.4s;
 }
-.cart-item:hover .delete-btn path {
+.delete-btn:hover path {
   fill: red;
 }
-.cart-item:hover .delete-btn rect {
+.delete-btn:hover rect {
   stroke: red;
 }
 
-@keyframes cart-animation {
-  0% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(5px);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-  75% {
-    transform: translateY(5px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
 .order-wrapper {
   position: absolute;
   width: 325px;

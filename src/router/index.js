@@ -8,8 +8,9 @@ const Purchases = () => import("../components/Purchases");
 Vue.use(VueRouter);
 
 const routes = [
+
   {
-    path: "/shop",
+    path: "/",
     name: "shop",
     component: Shop,
   },
@@ -29,5 +30,7 @@ const router = new VueRouter({
   routes,
   mode: "history",
 });
+
+
 
 export default router;

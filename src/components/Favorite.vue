@@ -77,7 +77,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  @import "@/scss/style";
 .page {
   transition: 0.2s;
 }

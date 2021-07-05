@@ -1,9 +1,9 @@
 <template>
-  <transition-group name="fade">
-    <Loader key="first" v-if="loader.show" />
-    <Notification key="second" v-if="notification.show" />
-    <Basket key="third" v-if="basket.show" />
-  </transition-group>
+    <transition-group name="fade">
+      <Loader key="first" v-if="loader.show" />
+      <Notification key="second" v-if="notification.show" />
+      <Basket key="third" v-if="basket.show" />
+    </transition-group>
 </template>
 
 <script>

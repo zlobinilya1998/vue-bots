@@ -60,7 +60,8 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
+  @import "@/scss/style";
 .wrapper {
   position: fixed;
   top: 25px;
@@ -70,8 +71,8 @@ export default {
   transform: translateX(-50%);
   z-index: 100;
   min-height: 40px;
-  background: #a5d364;
-  color: #ffffff;
+  background: $second-color;
+  color: $main-text;
   border-radius: 12px;
   display: flex;
   align-items: center;

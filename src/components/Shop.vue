@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="shop-wrapper">
     <swiper
       class="swiper"
       :options="swiperOption"
@@ -36,7 +36,7 @@
           <img
             :style="{ objectFit: 'contain' }"
             src="../assets/swiperBackground.png"
-            alt=""
+            alt="img"
           />
         </div>
       </swiper-slide>
@@ -47,7 +47,7 @@
         <div class="slide-item third"></div>
       </swiper-slide>
     </swiper>
-    <div class="sneakers-wrapper">
+    <div ref="sneakers" class="sneakers-wrapper">
       <div class="sneakers-title">
         <h3>Все кроссовки</h3>
         <div class="input-wrapper">
@@ -312,7 +312,7 @@
           </div>
         </div>
         <div key="second" v-else-if="filteredItems && !filteredItems.length">
-          <p :style="{ position: 'absolute', top: '50px' }">
+          <p class="no-match">
             Совпадений не найдено
           </p>
         </div>
@@ -529,6 +529,65 @@
         <Loader key="four" v-if="false" />
       </transition-group>
     </div>
+    <transition name="arrow">
+      <svg
+        @click="scrollTop"
+        v-if="pageY"
+        class="arrow-up"
+        width="60"
+        height="60"
+        viewBox="0 0 84 84"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g filter="url(#filter0_d)">
+          <circle cx="42" cy="38" r="38" fill="#DDF3FF" />
+          <circle cx="42" cy="38" r="37.5" stroke="#7AB3E6" />
+        </g>
+        <path
+          d="M25.5575 33.5787L42.0168 15.826C42.4242 15.3866 43.124 15.4017 43.5121 15.8583L58.5997 33.611C59.1517 34.2605 58.6901 35.2586 57.8378 35.2586H50.8261C50.2738 35.2586 49.8261 35.7063 49.8261 36.2586V61C49.8261 61.5523 49.3784 62 48.8261 62H35.1739C34.6216 62 34.1739 61.5523 34.1739 61V36.2586C34.1739 35.7063 33.7262 35.2586 33.1739 35.2586H26.2908C25.418 35.2586 24.9641 34.2188 25.5575 33.5787Z"
+          fill="#98CCFA"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+        <defs>
+          <filter
+            id="filter0_d"
+            x="0"
+            y="0"
+            width="84"
+            height="84"
+            filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB"
+          >
+            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            />
+            <feOffset dy="4" />
+            <feGaussianBlur stdDeviation="2" />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0.234201 0 0 0 0 0.423448 0 0 0 0 0.591667 0 0 0 1 0"
+            />
+            <feBlend
+              mode="normal"
+              in2="BackgroundImageFix"
+              result="effect1_dropShadow"
+            />
+            <feBlend
+              mode="normal"
+              in="SourceGraphic"
+              in2="effect1_dropShadow"
+              result="shape"
+            />
+          </filter>
+        </defs>
+      </svg>
+    </transition>
   </div>
 </template>
 
@@ -545,12 +604,16 @@ export default {
   data: () => ({
     items: null,
     search: "",
+    pageY: false,
     swiperOption: {
       spaceBetween: 30,
     },
   }),
   methods: {
     ...mapMutations(["setShowBasket", "setItemBasket", "deleteItemBasket"]),
+    scrollTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
     addItemToCart(index) {
       this.setItemBasket(this.items[index]);
     },
@@ -573,6 +636,11 @@ export default {
     },
   },
   async mounted() {
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset > 300) {
+        this.pageY = true;
+      } else this.pageY = false;
+    });
     let res = await axios.get(
       "https://60d8df41eec56d001747751d.mockapi.io/items"
     );
@@ -586,120 +654,163 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/scss/style";
+.swiper-slide {
+  transition: all 0.4s 0.2s;
+  transform: scaleY(90%);
+  border-radius: 20px;
+  &-prev {
+    box-shadow: 8px 7px 8px 0px rgba(34, 60, 80, 0.1);
+  }
+  &-active {
+    transform: scaleY(100%);
+  }
+  &-next {
+    box-shadow: -7px -1px 8px 0px rgba(34, 60, 80, 0.1);
+  }
+}
 .slide-item {
   height: 300px;
   background: #f4efe9;
   border-radius: 20px;
   padding: 20px 16px;
   background-repeat: no-repeat;
-}
-.slide-item.first {
-  display: flex;
-  justify-content: space-between;
-  padding: 0;
-}
-.slide-item.second {
-  background-image: url("../assets/slide2.jpg");
-  background-size: cover;
-}
-.slide-item.third {
-  background-image: url("../assets/slide3.jpg");
-  background-position: right 35% bottom 40%;
-  background-size: cover;
-}
-.slider-btn:hover {
-  box-shadow: 3px 3px 22px -12px rgba(34, 60, 80, 0.8);
-}
-.swiper-slide {
-  transition: all 0.4s 0.2s;
-  transform: scaleY(90%);
-  border-radius: 20px;
-}
-.swiper-slide-prev {
-  box-shadow: 8px 7px 8px 0px rgba(34, 60, 80, 0.1);
-}
-.swiper-slide-active {
-  transform: scaleY(100%);
-}
-.swiper-slide-next {
-  box-shadow: -7px -1px 8px 0px rgba(34, 60, 80, 0.1);
+  & .slider-btn:hover {
+    box-shadow: 3px 3px 22px -12px rgba(34, 60, 80, 0.8);
+  }
+  &.first {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    @media (max-width: $mobile) {
+      overflow: hidden;
+    }
+  }
+
+  &.second {
+    background-image: url("../assets/slide2.jpg");
+    background-size: cover;
+  }
+
+  &.third {
+    background-image: url("../assets/slide3.jpg");
+    background-position: right 35% bottom 40%;
+    background-size: cover;
+  }
+
+  @media (max-width: $mobile){
+    height: 150px;
+  }
 }
 .sneakers-wrapper {
   margin: 40px 0 0;
   position: relative;
   min-height: 700px;
+  .no-match {
+    position: absolute;
+    top: 50px;
+    @media (max-width: $mobile) {
+      top: 100px;
+    }
+  }
+  .sneakers-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      & input {
+        padding: 0 0 0 40px;
+        height: 45px;
+        border: 1px solid $main-color;
+        border-radius: 10px;
+      }
+      & svg {
+        position: absolute;
+      }
+      .search-icon {
+        left: 18px;
+        & path,
+        rect {
+          transition: 0.3s;
+        }
+      }
+      .clear-icon {
+        right: 10px;
+        cursor: pointer;
+        &:hover path {
+          fill: red;
+        }
+        &:hover rect {
+          stroke: red;
+        }
+      }
+    }
+    @media (max-width: $mobile) {
+      flex-direction: column;
+      align-items: flex-start;
+      .input-wrapper {
+        margin-top: 10px;
+      }
+    }
+  }
+  .sneakers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    &-item {
+      width: 210px;
+      height: 260px;
+      margin-top: 40px;
+      border: 1px solid $main-color;
+      border-radius: 40px;
+      transition: all 0.4s ease;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      &.liked {
+        transform: translateY(-10px);
+        box-shadow: 0px 14px 30px rgba(0, 0, 0, 0.05);
+      }
+      .sneaker-name {
+        font-size: $four-font;
+        margin: 14px 0;
+        font-weight: 400;
+      }
+      .sneaker-price.first {
+        font-weight: normal;
+      }
+      .sneaker-price.second {
+        margin-top: 2.5px;
+        font-weight: bolder;
+      }
+      @media (max-width:$mobile){
+        width: 150px;
+        height: 150px;
+      }
+    }
+    @media (max-width:$mobile){
+      justify-content: space-around;
+    }
+  }
 }
-.sneakers-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.search-icon {
-  left: 18px;
-}
-.clear-icon {
-  right: 10px;
+.arrow-up {
+  position: fixed;
+  bottom: 50px;
+  right: 100px;
   cursor: pointer;
-}
-.clear-icon path,
-rect {
-  transition: 0.3s;
-}
-.clear-icon:hover path {
-  fill: red;
-}
-.clear-icon:hover rect {
-  stroke: red;
-}
-.input-wrapper svg {
-  position: absolute;
-}
-.sneakers-title input {
-  padding: 0 0 0 40px;
-  height: 45px;
-  border: 1px solid #f3f3f3;
-  border-radius: 10px;
-}
-.sneakers {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-.sneakers-item {
-  width: 210px;
-  height: 260px;
-  margin-top: 40px;
-  border: 1px solid #f3f3f3;
-  border-radius: 40px;
-  transition: all 0.4s ease;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.sneaker-name {
-  font-size: 14px;
-  margin: 14px 0;
-  font-weight: 400;
-}
-.sneaker-price.first {
-  font-weight: normal;
-}
-.sneaker-price.second {
-  margin-top: 2.5px;
-  font-weight: bolder;
-}
-.sneakers-item.liked {
-  transform: translateY(-10px);
-  box-shadow: 0px 14px 30px rgba(0, 0, 0, 0.05);
+  @media (max-width: $mobile){
+    bottom: 10px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+  }
 }
 .like-enter-active,
 .like-leave-active {
@@ -714,5 +825,13 @@ rect {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
   opacity: 0;
+}
+.arrow-enter-active,
+.arrow-leave-active {
+  transition: all 0.3s;
+}
+.arrow-enter, .arrow-leave-to /* .arrow-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-25px);
 }
 </style>

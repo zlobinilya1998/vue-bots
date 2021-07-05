@@ -5,7 +5,7 @@
         <div v-if="showCart" class="cart" ref="cart">
           <h2 class="cart-title">Корзина</h2>
           <div v-if="basket.items.length > 0" class="items-wrapper">
-            <transition-group name="list" appear>
+            <transition-group name="list" move-class="move" appear>
               <div
                 v-for="item of basket.items"
                 :key="item.id"
@@ -174,7 +174,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "./src/scss/style";
 .cart-wrapper {
   position: fixed;
   left: 0;
@@ -191,12 +192,12 @@ export default {
   height: 100%;
   width: 385px;
   transition: all 0.3s;
-  background: #ffffff;
+  background: $third-color;
   padding: 30px;
-}
-.cart-title {
-  padding-bottom: 15px;
-  border-bottom: 0.5px solid rgba(128, 128, 128, 0.3);
+  &-title {
+    padding-bottom: 15px;
+    border-bottom: 0.5px solid rgba(128, 128, 128, 0.3);
+  }
 }
 .cart-empty-wrapper {
   display: flex;
@@ -208,13 +209,13 @@ export default {
 }
 .cart-empty-title {
   font-weight: 600;
-  font-size: 22px;
+  font-size: $second-font;
   line-height: 27px;
   text-align: center;
   margin: 20px 0 10px;
 }
 .cart-empty-description {
-  font-size: 16px;
+  font-size: $third-font;
   line-height: 24px;
   opacity: 0.4;
   text-align: center;
@@ -233,7 +234,7 @@ export default {
 .cart-item {
   width: 100%;
   height: 100px;
-  background: #ffffff;
+  background: $third-color;
   border: 1px solid #f3f3f3;
   border-radius: 20px;
   margin: 20px 0;
@@ -254,7 +255,6 @@ rect {
 .delete-btn:hover rect {
   stroke: red;
 }
-
 .order-wrapper {
   position: absolute;
   width: 325px;
@@ -283,13 +283,5 @@ rect {
 .cart-enter, .cart-leave-to /* .cart-leave-active до версии 2.1.8 */ {
   transform: translateX(500px);
   opacity: 0;
-}
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
-}
-.list-enter, .list-leave-to /* .list-leave-active до версии 2.1.8 */ {
-  opacity: 0;
-  transform: translateX(30px);
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
   <div class="app">
-    <Main v-if="user"/>
+    <Main v-if="user" />
     <Auth v-else />
     <Modals />
   </div>
 </template>
 
 <script>
-const Main = () => import("./views/Main");
-const Auth = () => import("./views/Auth");
-const Modals = () => import("./views/Modals");
+const Main = () => import("@/views/Main");
+const Auth = () => import("@/views/Auth");
+const Modals = () => import("@/views/Modals");
 
 export default {
   name: "App",
@@ -33,7 +33,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "scss/style";
+
 * {
   margin: 0;
   padding: 0;
@@ -43,26 +45,8 @@ export default {
 body::-webkit-scrollbar {
   width: 0;
 }
-.btn {
-  height: 55px;
-  width: 245px;
-  border-radius: 18px;
-  background: #9dd458;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  margin-top: 40px;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 21px;
-}
-.btn:hover {
-  box-shadow: 3px 3px 22px -12px rgba(34, 60, 80, 0.8);
-}
 .input {
-  background: #e7f6ff;
+  background: $main-color;
   border-radius: 20px;
   display: flex;
   height: 50px;
@@ -71,9 +55,30 @@ body::-webkit-scrollbar {
   transition: 0.3s;
   border: none;
   width: 100%;
+  &:focus {
+    outline: none;
+  }
 }
-.input:focus {
-  outline: none;
+.input.error {
+  border: 1px solid red;
+}
+.btn {
+  height: 55px;
+  width: 245px;
+  border-radius: 18px;
+  background: $second-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-top: 40px;
+  color: $main-text;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: $third-font;
+  &:hover {
+    box-shadow: 3px 3px 22px -12px rgba(34, 60, 80, 0.8);
+  }
 }
 .img {
   width: 100%;
@@ -95,10 +100,14 @@ body::-webkit-scrollbar {
 }
 </style>
 
-<style scoped>
+<style scoped lang="scss">
+@import "scss/style";
 .app {
   min-height: 100vh;
-  background: #e7f6ff;
+  background: $main-color;
   padding: 85px 0;
+  @media (max-width: $mobile) {
+    padding: 0 20px;
+  }
 }
 </style>

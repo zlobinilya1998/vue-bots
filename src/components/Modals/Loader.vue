@@ -23,7 +23,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  @import "@/scss/style";
 .loader {
   position: absolute;
   left: 0;

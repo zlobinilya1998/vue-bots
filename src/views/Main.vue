@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Header/>
+    <Header />
     <div class="content">
       <transition name="router" appear mode="out-in">
         <router-view />
@@ -19,11 +19,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "../scss/style";
 .container {
   max-width: 1080px;
   margin: 0 auto;
-  background: #ffffff;
+  background: $third-color;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04);
   border-radius: 20px;
   transition: all 0.3s;
@@ -31,8 +32,10 @@ export default {
 .content {
   padding: 45px 60px;
   overflow: hidden;
+  @media (max-width: $mobile) {
+    padding: 10px;
+  }
 }
-
 .router-enter-active,
 .router-leave-active {
   transition: all 0.2s;

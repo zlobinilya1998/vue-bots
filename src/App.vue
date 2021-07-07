@@ -1,25 +1,26 @@
 <template>
   <div class="app">
-    <Main v-if="user" />
-    <Auth v-else />
+    <Main v-if="user"/>
+    <Auth v-else/>
     <Modals />
   </div>
 </template>
 
 <script>
 const Main = () => import("@/views/Main");
-const Auth = () => import("@/views/Auth");
 const Modals = () => import("@/views/Modals");
+const Auth = () => import("@/views/Auth");
+import {mapGetters} from "vuex"
 
 export default {
   name: "App",
-  data: () => ({
-    user: null,
-  }),
   components: {
     Main,
     Modals,
-    Auth,
+    Auth
+  },
+  computed:{
+    ...mapGetters(['user'])
   },
   watch: {
     basket: {

@@ -312,9 +312,7 @@
           </div>
         </div>
         <div key="second" v-else-if="filteredItems && !filteredItems.length">
-          <p class="no-match">
-            Совпадений не найдено
-          </p>
+          <p class="no-match">Совпадений не найдено</p>
         </div>
         <div key="third" class="sneakers" v-else-if="search">
           <div
@@ -526,7 +524,18 @@
             </div>
           </div>
         </div>
-        <Loader key="four" v-if="false" />
+        <div key="four" class="sneakers" v-else>
+          <div
+            v-for="(item, index) of 8"
+            :key="index"
+            class="sneakers-item preloader"
+          >
+            <div class="preloader-photo"></div>
+            <div class="preloader-title"></div>
+            <div class="preloader-text"></div>
+            <div class="preloader-price"></div>
+          </div>
+        </div>
       </transition-group>
     </div>
     <transition name="arrow">
@@ -595,14 +604,10 @@
 import { mapMutations, mapGetters } from "vuex";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/swiper.min.css";
-import axios from "axios";
-
-const Loader = () => import("./Modals/Loader");
 
 export default {
   name: "Shop",
   data: () => ({
-    items: null,
     search: "",
     pageY: false,
     swiperOption: {
@@ -610,7 +615,12 @@ export default {
     },
   }),
   methods: {
-    ...mapMutations(["setShowBasket", "setItemBasket", "deleteItemBasket"]),
+    ...mapMutations([
+      "setShowBasket",
+      "setItemBasket",
+      "deleteItemBasket",
+      "setItems",
+    ]),
     scrollTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
@@ -622,7 +632,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["basket"]),
+    ...mapGetters(["basket", "user", "items"]),
     filteredItems() {
       if (!this.items) return;
       return this.items.filter((item) =>
@@ -635,21 +645,23 @@ export default {
       return this.basket.items.reduce(reducer, initValue);
     },
   },
-  async mounted() {
+  mounted() {
+    if (!this.items) {
+      setTimeout(() => {
+        this.$axios.get("/sneakers").then((res) => {
+          this.setItems(res.data.map((item) => ({ ...item, liked: false })));
+        });
+      }, 1500);
+    }
     window.addEventListener("scroll", () => {
       if (window.pageYOffset > 300) {
         this.pageY = true;
       } else this.pageY = false;
     });
-    let res = await axios.get(
-      "https://60d8df41eec56d001747751d.mockapi.io/items"
-    );
-    this.items = res.data.map((item) => ({ ...item, liked: false }));
   },
   components: {
     Swiper,
     SwiperSlide,
-    Loader,
   },
 };
 </script>
@@ -699,7 +711,7 @@ export default {
     background-size: cover;
   }
 
-  @media (max-width: $mobile){
+  @media (max-width: $mobile) {
     height: 150px;
   }
 }
@@ -778,6 +790,48 @@ export default {
         transform: translateY(-10px);
         box-shadow: 0px 14px 30px rgba(0, 0, 0, 0.05);
       }
+      &.preloader {
+        &::before {
+          content: "";
+          width: 5px;
+          height: 100%;
+          background: #ffffff;
+          position: absolute;
+          left: 0;
+          animation: preloader infinite linear 1s;
+        }
+        overflow: hidden;
+        position: relative;
+        justify-content: flex-start;
+        align-items: flex-start;
+        .preloader-photo {
+          height: 91px;
+          width: 100%;
+          border-radius: 10px;
+          background: #f2f2f2;
+        }
+        .preloader-title {
+          height: 15px;
+          width: 100%;
+          background: #f2f2f2;
+          border-radius: 5px;
+          margin-top: 15px;
+        }
+        .preloader-text {
+          margin-top: 5px;
+          height: 15px;
+          width: 75%;
+          background: #f2f2f2;
+          border-radius: 5px;
+        }
+        .preloader-price {
+          margin-top: 15px;
+          height: 20px;
+          width: 50%;
+          background: #f2f2f2;
+          border-radius: 5px;
+        }
+      }
       .sneaker-name {
         font-size: $four-font;
         margin: 14px 0;
@@ -790,12 +844,12 @@ export default {
         margin-top: 2.5px;
         font-weight: bolder;
       }
-      @media (max-width:$mobile){
+      @media (max-width: $mobile) {
         width: 150px;
         height: 150px;
       }
     }
-    @media (max-width:$mobile){
+    @media (max-width: $mobile) {
       justify-content: space-around;
     }
   }
@@ -805,7 +859,7 @@ export default {
   bottom: 50px;
   right: 100px;
   cursor: pointer;
-  @media (max-width: $mobile){
+  @media (max-width: $mobile) {
     bottom: 10px;
     right: 20px;
     width: 40px;
@@ -833,5 +887,13 @@ export default {
 .arrow-enter, .arrow-leave-to /* .arrow-leave-active до версии 2.1.8 */ {
   opacity: 0;
   transform: translateY(-25px);
+}
+@keyframes preloader {
+  0% {
+    left: 0%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 </style>

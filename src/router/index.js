@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 const Shop = () => import("../components/Shop");
 const Favorite = () => import("../components/Favorite");
-const Purchases = () => import("../components/Purchases");
+const Profile = () => import("../components/Profile");
 
 Vue.use(VueRouter);
 
@@ -20,9 +20,9 @@ const routes = [
     component: Favorite,
   },
   {
-    path: "/purchases",
-    name: "purchases",
-    component: Purchases,
+    path: "/profile",
+    name: "profile",
+    component: Profile,
   },
 ];
 

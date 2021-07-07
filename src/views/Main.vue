@@ -30,7 +30,7 @@ export default {
   transition: all 0.3s;
 }
 .content {
-  padding: 45px 60px;
+  padding: 45px;
   overflow: hidden;
   @media (max-width: $mobile) {
     padding: 10px;

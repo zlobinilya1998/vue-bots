@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @keyup.enter="loginBtn">
     <div class="header-logo">
       <img class="header-img" width="40" src="../assets/logo.png" />
       <div class="logo-title-wrapper">
@@ -53,45 +53,146 @@
           <div :style="{ position: 'relative', marginTop: '10px' }">
             <div
               class="text"
-              :class="{ danger: errors.login }"
-              :style="{ transition: '.3s', color: $v.auth.login.$dirty && $v.auth.login.$invalid ? 'red' : '' }"
+              :class="{ danger: $v.auth.login.$anyDirty }"
+              :style="{
+                transition: '.3s',
+                color:
+                  $v.auth.login.$dirty && $v.auth.login.$invalid ? 'red' : '',
+              }"
             >
-              {{$v.auth.login.$dirty && $v.auth.login.$invalid ? "Минимальная длина 5 символов" : "Логин"}}
+              {{
+                $v.auth.login.$dirty && $v.auth.login.$invalid
+                  ? "Минимальная длина 5 символов"
+                  : "Логин"
+              }}
             </div>
             <input class="input" v-model="$v.auth.login.$model" type="text" />
           </div>
           <div :style="{ position: 'relative', marginTop: '20px' }">
             <div
               class="text"
-              :class="{ danger: errors.pass }"
-              :style="{ transition: '.3s', color: $v.auth.pass.$dirty && $v.auth.pass.$invalid ? 'red' : ''  }"
+              :class="{ danger: $v.auth.password.$anyDirty }"
+              :style="{
+                transition: '.3s',
+                color:
+                  $v.auth.password.$dirty && $v.auth.password.$invalid
+                    ? 'red'
+                    : '',
+              }"
             >
-              {{$v.auth.pass.$dirty && $v.auth.pass.$invalid ? "Минимальная длина 5 символов" : "Пароль"}}
+              {{
+                $v.auth.password.$dirty && $v.auth.password.$invalid
+                  ? "Минимальная длина 5 символов"
+                  : "Пароль"
+              }}
             </div>
-            <input class="input" v-model="$v.auth.pass.$model" type="password" />
+            <input
+              class="input"
+              v-model="$v.auth.password.$model"
+              type="password"
+            />
           </div>
         </div>
       </div>
       <div v-else-if="step === 1">
         <div :style="{ margin: '35px 0 0' }">
           <div :style="{ position: 'relative', marginTop: '10px' }">
-            <div class="text">Логин</div>
-            <input class="input" v-model="$v.regForm.login.$model" type="text" />
+            <div
+              class="text"
+              :class="{ danger: $v.regForm.login.$anyDirty }"
+              :style="{
+                color:
+                  $v.regForm.login.$dirty && $v.regForm.login.$invalid
+                    ? 'red'
+                    : '',
+              }"
+            >
+              {{
+                $v.regForm.login.$dirty && $v.regForm.login.$invalid
+                  ? "Минимальная длина 5 символов"
+                  : "Логин"
+              }}
+            </div>
+            <input
+              class="input"
+              v-model="$v.regForm.login.$model"
+              type="text"
+            />
           </div>
           <div :style="{ position: 'relative', marginTop: '20px' }">
-            <div class="text">Почта</div>
-            <input class="input" v-model="$v.regForm.email.$model" type="email" />
+            <div
+              class="text"
+              :class="{ danger: $v.regForm.email.$anyDirty }"
+              :style="{
+                color:
+                  $v.regForm.email.$dirty && $v.regForm.email.$invalid
+                    ? 'red'
+                    : '',
+              }"
+            >
+              {{
+                $v.regForm.email.$dirty && $v.regForm.email.$invalid
+                  ? "Минимальная длина 5 символов"
+                  : "Почта"
+              }}
+            </div>
+            <input
+              class="input"
+              v-model="$v.regForm.email.$model"
+              type="email"
+            />
           </div>
           <div :style="{ position: 'relative', marginTop: '20px' }">
-            <div class="text">Пароль</div>
-            <input class="input" v-model="$v.regForm.pass.$model" type="password" />
+            <div
+              class="text"
+              :class="{ danger: $v.regForm.password.$anyDirty }"
+              :style="{
+                color:
+                  $v.regForm.password.$dirty && $v.regForm.password.$invalid
+                    ? 'red'
+                    : '',
+              }"
+            >
+              {{
+                $v.regForm.password.$dirty && $v.regForm.password.$invalid
+                  ? "Минимальная длина 5 символов"
+                  : "Пароль"
+              }}
+            </div>
+            <input
+              class="input"
+              v-model="$v.regForm.password.$model"
+              type="password"
+            />
           </div>
-          <div :style="{ position: 'relative', marginTop: '20px' }">
-            <div class="text">Повторите пароль</div>
+          <div
+            :style="{
+              position: 'relative',
+              marginTop: '20px',
+            }"
+          >
+            <div
+              class="text"
+              :class="{ danger: $v.regForm.confPassword.$anyDirty }"
+              :style="{
+                color:
+                  $v.regForm.confPassword.$dirty &&
+                  $v.regForm.confPassword.$invalid
+                    ? 'red'
+                    : '',
+              }"
+            >
+              {{
+                $v.regForm.confPassword.$dirty &&
+                $v.regForm.confPassword.$invalid
+                  ? "Минимальная длина 5 символов"
+                  : "Повторите пароль"
+              }}
+            </div>
             <input
               minlength="4"
               class="input"
-              v-model="$v.regForm.confPass.$model"
+              v-model="$v.regForm.confPassword.$model"
               type="password"
             />
           </div>
@@ -119,7 +220,16 @@
       </transition>
       <transition-group name="fade">
         <div key="first" class="bottom-btn" v-if="step === 0">
-          <button class="btn" @click="loginBtn">Вход</button>
+          <button
+            class="btn"
+            :class="{ error: isAuthInvalid && $v.auth.$anyDirty }"
+            @click="loginBtn"
+          >
+            <transition-group name="fade">
+              <Loader w="35" h="35" key="first" v-if="loader.show" />
+              <p key="second" v-else>Вход</p>
+            </transition-group>
+          </button>
           <div class="step-btn-wrapper">
             <p
               class="step-btn"
@@ -142,7 +252,12 @@
           </div>
         </div>
         <div key="second" class="bottom-btn" v-else-if="step === 1">
-          <button class="btn">Зарегистрироваться</button>
+          <button class="btn" @click="register">
+            <transition-group name="fade">
+              <Loader key="first" v-if="loader.show" />
+              <p key="second" v-else>Зарегистрироваться</p>
+            </transition-group>
+          </button>
         </div>
         <div key="third" class="bottom-btn" v-else-if="step === 2">
           <button class="btn">Отправить на почту</button>
@@ -154,20 +269,21 @@
 
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
-
+import { mapMutations, mapGetters } from "vuex";
+const Loader = () => import("../components/Modals/Loader");
 export default {
   name: "Auth",
   data: () => ({
     step: 0,
     curHeight: 400,
-    auth:{
-      login:"",
-      pass:"",
+    auth: {
+      login: "",
+      password: "",
     },
     regForm: {
       login: "",
-      pass: "",
-      confPass: "",
+      password: "",
+      confPassword: "",
       email: "",
     },
     errors: {
@@ -175,37 +291,38 @@ export default {
       pass: false,
     },
   }),
+  components: {
+    Loader,
+  },
   validations: {
     auth: {
-      login:{
+      login: {
         required,
         minLength: minLength(5),
       },
-      pass: {
+      password: {
         required,
         minLength: minLength(5),
       },
     },
-    regForm:{
-      login:{
+    regForm: {
+      login: {
         required,
         minLength: minLength(5),
       },
-      pass:{
+      password: {
         required,
         minLength: minLength(5),
       },
-      confPass:{
+      confPassword: {
         required,
         minLength: minLength(5),
       },
-      email:{
+      email: {
         required,
         minLength: minLength(5),
       },
-    }
-
-
+    },
   },
   watch: {
     errors: {
@@ -219,32 +336,73 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["loader"]),
     currentTitle() {
       if (this.step === 0) return "Авторизация";
       else if (this.step === 1) return "Регистрация";
       else if (this.step === 2) return "Восстановление пароля";
       else return "";
     },
-    isAuthInvalid(){
-      return this.$v.auth.$invalid
+    isAuthInvalid() {
+      return this.$v.auth.$invalid;
     },
-    isRegInvalid(){
-      return this.$v.regForm.$invalid
+    isRegInvalid() {
+      return this.$v.regForm.$invalid;
     },
   },
   methods: {
+    ...mapMutations(["setLoader", "setNotification", "setUser"]),
+    register() {
+      if (this.isRegInvalid) return;
+      this.setLoader({ show: true });
+      this.$axios
+        .post("register", this.regForm)
+        .then((res) => {
+          this.setNotification({
+            show: true,
+            text: res.data.message,
+            type: res.data.type,
+          });
+          setTimeout(() => {
+            this.setUser(res.data.user);
+            this.setLoader({ show: false });
+          }, 2500);
+        })
+        .catch((e) => {
+          this.setLoader({ show: false });
+          this.setNotification({
+            show: true,
+            text: "Что-то пошло не так!",
+            type: "danger",
+          });
+          console.log(e);
+        });
+    },
     stepBack() {
       if (!this.step) return;
       this.curHeight = 400;
       this.step = 0;
     },
     loginBtn() {
-      if (this.errors.login || this.errors.pass) return;
-      if (!this.login.length && !this.pass.length) {
-        this.errors.login = true;
-        this.errors.pass = true;
-        return;
-      }
+      if (this.isAuthInvalid) return;
+      this.setLoader({ show: true });
+      this.$axios.post("login", this.auth).then((res) => {
+        this.setNotification({
+          show: true,
+          text: res.data.message,
+          type: res.data.type,
+        });
+        setTimeout(() => {
+          this.setLoader({ show: false });
+          this.setUser(res.data.user);
+        }, 2500);
+      });
+      // if (this.errors.login || this.errors.pass) return;
+      // if (!this.login.length && !this.pass.length) {
+      //   this.errors.login = true;
+      //   this.errors.pass = true;
+      //   return;
+      // }
     },
   },
 };
@@ -301,6 +459,10 @@ export default {
 }
 .btn {
   width: 100%;
+  position: relative;
+  &.error {
+    background: $four-color;
+  }
 }
 .step-btn {
   font-size: $third-font;

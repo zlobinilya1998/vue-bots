@@ -1,17 +1,22 @@
+require('dotenv').config()
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const verify = require('./middlewares/jwt')
+
 const app = express();
 const router = express.Router();
 
-const port = 3000 || env.process.port;
 
+const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/login", require("./routes/login.routes"));
+app.use("/api/login",require("./routes/login.routes"));
 app.use("/api/register", require("./routes/register.routes"));
-app.use("/api/sneakers", require("./routes/sneakers.routes"));
+app.use("/api/sneakers",verify,require("./routes/sneakers.routes"));
+app.use("/api/order",verify,require("./routes/order.routes"))
+app.use("/api/purchases",verify,require("./routes/purchases.routes"))
 
 app.get("/", (req, res) => {
   res.send("Hello from App");

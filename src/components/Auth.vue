@@ -66,7 +66,12 @@
                   : "Логин"
               }}
             </div>
-            <input class="input" v-model="$v.auth.login.$model" type="text" />
+            <input
+              :disabled="loader.show"
+              class="input"
+              v-model="$v.auth.login.$model"
+              type="text"
+            />
           </div>
           <div :style="{ position: 'relative', marginTop: '20px' }">
             <div
@@ -88,6 +93,7 @@
             </div>
             <input
               class="input"
+              :disabled="loader.show"
               v-model="$v.auth.password.$model"
               type="password"
             />
@@ -270,7 +276,7 @@
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
 import { mapMutations, mapGetters } from "vuex";
-const Loader = () => import("../components/Modals/Loader");
+const Loader = () => import("./Modals/Loader");
 export default {
   name: "Auth",
   data: () => ({
@@ -366,6 +372,7 @@ export default {
           setTimeout(() => {
             this.setUser(res.data.user);
             this.setLoader({ show: false });
+            this.$router.push({name:"shop"})
           }, 2500);
         })
         .catch((e) => {
@@ -384,25 +391,16 @@ export default {
       this.step = 0;
     },
     loginBtn() {
-      if (this.isAuthInvalid) return;
+      if (this.isAuthInvalid || this.loader.show) return;
       this.setLoader({ show: true });
       this.$axios.post("login", this.auth).then((res) => {
-        this.setNotification({
-          show: true,
-          text: res.data.message,
-          type: res.data.type,
-        });
         setTimeout(() => {
           this.setLoader({ show: false });
           this.setUser(res.data.user);
+          sessionStorage.setItem(`token`,JSON.stringify(res.data.user.token));
+          this.$router.push({name:"shop"})
         }, 2500);
       });
-      // if (this.errors.login || this.errors.pass) return;
-      // if (!this.login.length && !this.pass.length) {
-      //   this.errors.login = true;
-      //   this.errors.pass = true;
-      //   return;
-      // }
     },
   },
 };
@@ -475,6 +473,7 @@ export default {
   position: absolute;
   bottom: -35px;
   width: 100%;
+  padding: 0 10px;
 }
 .img {
   height: 225px;

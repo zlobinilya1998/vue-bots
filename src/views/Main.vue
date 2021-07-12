@@ -10,7 +10,7 @@
 </template>
 
 <script>
-const Header = () => import("../components/Header");
+const Header = () => import("../components/Header/Header");
 export default {
   name: "Main",
   components: {

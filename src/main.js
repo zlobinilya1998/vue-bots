@@ -11,6 +11,11 @@ Vue.config.productionTip = false;
 const axiosConfig = {
   baseURL: 'http://localhost:3000/api/',
 };
+
+let token = JSON.parse(sessionStorage.getItem('token'))
+if (token){
+  axios.defaults.headers.common['auth-token'] = token;
+}
 Vue.prototype.$axios = axios.create(axiosConfig);
 
 Vue.use(vuelidate);

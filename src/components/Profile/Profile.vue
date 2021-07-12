@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page" :style="{padding:'0 20px'}">
     <div
       :style="{
         display: 'flex',
@@ -40,56 +40,7 @@
     </div>
     <div class="page-content">
         <div class="page-content-main">
-          <div @click="activeNav = 'Текущие заказы'" :class="{active:activeNav === 'Текущие заказы'}" class="page-content-main-item">
-            <div class="icon">
-              <svg
-                width="29"
-                height="35"
-                viewBox="0 0 90 105"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2 7C2 4.23857 4.23858 2 7 2H83C85.7614 2 88 4.23858 88 7V98C88 100.761 85.7523 103 82.9909 103C54.0975 103 35.9025 103 7.00914 103C4.24772 103 2 100.761 2 98V7Z"
-                  fill="white"
-                  stroke="#7EC3FF"
-                  stroke-width="3"
-                />
-                <line
-                  x1="30.5"
-                  y1="25.5"
-                  x2="67.5"
-                  y2="25.5"
-                  stroke="#7EC3FF"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-                <line
-                  x1="30.5"
-                  y1="37.5"
-                  x2="67.5"
-                  y2="37.5"
-                  stroke="#7EC3FF"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-                <line
-                  x1="30.5"
-                  y1="48.5"
-                  x2="67.5"
-                  y2="48.5"
-                  stroke="#7EC3FF"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-                <circle cx="23.5" cy="25.5" r="1.5" fill="#7EC3FF" />
-                <circle cx="23.5" cy="37.5" r="1.5" fill="#7EC3FF" />
-                <circle cx="23.5" cy="48.5" r="1.5" fill="#7EC3FF" />
-              </svg>
-            </div>
-            <p class="page-content-main-item-description">Текущие заказы</p>
-          </div>
-          <div @click="activeNav = 'Личный счет'" :class="{active:activeNav === 'Личный счет'}" class="page-content-main-item">
+          <div @click="navigation('score')" :class="{active:$route.name === 'score'}"  class="page-content-main-item">
             <div class="icon">
               <svg
                 width="29"
@@ -156,7 +107,7 @@
             </div>
             <p class="page-content-main-item-description">Личный счет</p>
           </div>
-          <div @click="activeNav = 'Личные данные'" :class="{active:activeNav === 'Личные данные'}" class="page-content-main-item">
+          <div @click="navigation('personal')" :class="{active:$route.name === 'personal'}" class="page-content-main-item">
             <div class="icon">
               <svg
                 width="29"
@@ -195,7 +146,7 @@
             </div>
             <p class="page-content-main-item-description">Личные данные</p>
           </div>
-          <div @click="activeNav = 'История заказов'" :class="{active:activeNav === 'История заказов'}" class="page-content-main-item">
+          <div @click="navigation('purchases')" :class="{active:$route.name === 'purchases'}"  class="page-content-main-item">
             <div class="icon">
               <svg
                 width="29"
@@ -292,7 +243,7 @@
             </div>
             <p class="page-content-main-item-description">История заказов</p>
           </div>
-          <div @click="activeNav = 'Подписки'" :class="{active:activeNav === 'Подписки'}" class="page-content-main-item">
+          <div @click="navigation('favorite')" :class="{active:$route.name === 'favorite'}" class="page-content-main-item">
             <div class="icon">
               <svg
                 width="29"
@@ -327,50 +278,13 @@
                 />
               </svg>
             </div>
-            <p class="page-content-main-item-description">Подписки</p>
-          </div>
-          <div @click="activeNav = 'Корзина'" :class="{active:activeNav === 'Корзина'}" class="page-content-main-item">
-            <div class="icon">
-              <svg
-                width="29"
-                height="35"
-                viewBox="0 0 126 88"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M103.678 67.5H52.258C49.1431 67.5 46.4029 65.4417 45.5352 62.4501L32.9313 19H116.838C121.742 19 125.126 23.9126 123.378 28.4948L110.218 62.9948C109.184 65.7076 106.582 67.5 103.678 67.5Z"
-                  fill="white"
-                />
-                <path
-                  d="M2 2H22.742C25.8569 2 28.5971 4.05826 29.4648 7.04986L32.9313 19M32.9313 19L45.5352 62.4501C46.4029 65.4417 49.1431 67.5 52.258 67.5H103.678C106.582 67.5 109.184 65.7076 110.218 62.9948L123.378 28.4948C125.126 23.9126 121.742 19 116.838 19H32.9313Z"
-                  stroke="#7EC3FF"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-                <circle
-                  cx="51"
-                  cy="83"
-                  r="3.5"
-                  fill="white"
-                  stroke="#7EC3FF"
-                  stroke-width="3"
-                />
-                <circle
-                  cx="105"
-                  cy="83"
-                  r="3.5"
-                  fill="white"
-                  stroke="#7EC3FF"
-                  stroke-width="3"
-                />
-              </svg>
-            </div>
-            <p class="page-content-main-item-description">Корзина</p>
+            <p class="page-content-main-item-description">Избранное</p>
           </div>
         </div>
         <div class="page-content-nav">
-          <div class="route">else</div>
+          <transition name="fade" mode="out-in">
+              <router-view></router-view>
+          </transition>
         </div>
     </div>
   </div>
@@ -387,9 +301,12 @@ export default {
   }),
   methods: {
     ...mapMutations(["setUser"]),
+    navigation(name){
+      this.$router.push({name})
+    }
   },
   computed: {
-    ...mapGetters(["purchases"]),
+    ...mapGetters(["user"]),
     pageTitle() {
       if (!this.step) return "Личный кабинет";
       else return this.step;
@@ -403,7 +320,6 @@ export default {
 .page {
   transition: 0.2s;
   position: relative;
-  min-height: 600px;
   &-title {
     text-align: center;
     color: $second-color;

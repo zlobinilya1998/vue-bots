@@ -2,6 +2,7 @@ const { Router } = require("express");
 const router = Router();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs")
+const jwt = require('jsonwebtoken')
 
 router.post("/", async (req, res) => {
   let { login, password, email } = req.body;
@@ -13,7 +14,8 @@ router.post("/", async (req, res) => {
     const hashPassword = bcrypt.hashSync(password,6);
     let user = new User({ login, password:hashPassword, email });
     await user.save();
-    res.send({message:'Пользователь успешно создан',type:'success',user});
+    const token = jwt.sign({login},process.env.TOKEN_SECRET);
+    res.header("auth-token",token).send({message:'Пользователь успешно создан',type:'success',user});
   } catch (e) {
     console.log(e)
     res.send({message:'Что-то пошло не так!',type:'danger'})

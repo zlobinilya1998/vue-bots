@@ -5,12 +5,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user:null,
+    user: null,
     items: null,
     basket: {
       show: false,
       items: [],
-      liked: [],
     },
     purchases: [],
     favorites: [],
@@ -18,7 +17,7 @@ export default new Vuex.Store({
       notification: {
         show: false,
         text: null,
-        type:'danger',
+        type: "danger",
       },
       loader: {
         show: false,
@@ -26,8 +25,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    setUser:(state,payload) => state.user = payload,
-    setItems:(state,payload) => state.items = payload,
+    setUser: (state, payload) => (state.user = payload),
+    setItems: (state, payload) => (state.items = payload),
+    clearBasket: ({ basket }) => (basket.items = []),
     setShowBasket: ({ basket }, payload) => (basket.show = payload),
     setItemBasket: ({ basket }, payload) => {
       basket.items.push(payload);
@@ -38,9 +38,9 @@ export default new Vuex.Store({
     setNotification: ({ modals }, payload) => {
       modals.notification = payload;
     },
-    setLoader:({modals},payload) => {
+    setLoader: ({ modals }, payload) => {
       modals.loader = payload;
-    }
+    },
   },
   getters: {
     user: (state) => state.user,

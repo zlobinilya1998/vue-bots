@@ -1,26 +1,20 @@
 <template>
-  <div class="app">
-    <Main v-if="user"/>
-    <Auth v-else/>
+  <div class="App">
+    <MainLayout />
     <Modals />
   </div>
 </template>
 
 <script>
-const Main = () => import("@/views/Main");
-const Modals = () => import("@/views/Modals");
-const Auth = () => import("@/views/Auth");
-import {mapGetters} from "vuex"
+const MainLayout = () => import("@/Layouts/MainLayout");
+const Modals = () => import("@/components/Modals/Modals");
+import { mapMutations } from "vuex";
 
 export default {
   name: "App",
   components: {
-    Main,
+    MainLayout,
     Modals,
-    Auth
-  },
-  computed:{
-    ...mapGetters(['user'])
   },
   watch: {
     basket: {
@@ -30,6 +24,21 @@ export default {
       },
       deep: true,
     },
+  },
+  methods: {
+    ...mapMutations(["setUser"]),
+  },
+  mounted() {
+    let token = JSON.parse(sessionStorage.getItem("token"));
+    if (token)
+      this.$axios
+        .post("login/session")
+        .then((res) => {
+          this.setUser(res.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
   },
 };
 </script>
@@ -100,10 +109,9 @@ body::-webkit-scrollbar {
   opacity: 0;
 }
 </style>
-
 <style scoped lang="scss">
 @import "scss/style";
-.app {
+.App {
   min-height: 100vh;
   background: $main-color;
   padding: 85px 0;

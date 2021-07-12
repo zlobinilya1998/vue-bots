@@ -1,6 +1,6 @@
 <template>
-  <div class="page" :style="{ height: favorites.length ? 'auto' : '450px' }">
-    <div v-if="favorites.length > 0" class="page-title">
+  <div class="page">
+    <div v-if="user.favorites.length > 0" class="page-title">
       <svg
         @click="$router.go(-1)"
         width="35"
@@ -31,38 +31,13 @@
     <div v-else class="no-purchases">
       <img
         class="no-purchases-img"
-        src="../assets/purchases.png"
+        src="../../assets/purchases.png"
         alt="purchases"
       />
       <h3 class="no-purchases-title">У вас нет избранных товаров</h3>
       <p class="no-purchases-desctiption">
         Нажмите на лайк хотя бы на одном из них!
       </p>
-      <button @click="$router.go(-1)" class="btn order-btn">
-        <svg
-          width="16"
-          height="14"
-          viewBox="0 0 16 14"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M14.7144 7L1.00007 7"
-            stroke="white"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M7 13L1 7L7 1"
-            stroke="white"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <p>Вернуться назад</p>
-      </button>
     </div>
   </div>
 </template>
@@ -72,7 +47,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "Favorites",
   computed: {
-    ...mapGetters(["favorites"]),
+    ...mapGetters(["user"]),
   },
 };
 </script>
@@ -90,7 +65,6 @@ export default {
   margin-right: 10px;
 }
 .no-purchases {
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

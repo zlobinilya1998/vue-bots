@@ -4,75 +4,144 @@
       <transition name="cart">
         <div v-if="showCart" class="cart" ref="cart">
           <h2 class="cart-title">Корзина</h2>
-          <div v-if="basket.items.length > 0" class="items-wrapper">
-            <transition-group name="list" move-class="move" appear>
-              <div
-                v-for="item of basket.items"
-                :key="item.id"
-                class="cart-item"
-              >
-                <img
-                  :style="{ position: 'absolute', left: '0' }"
-                  width="100"
-                  height="100%"
-                  src=""
-                  alt=""
-                />
-                <div :style="{ marginLeft: '100px' }">
-                  {{ item.name }}
-                  {{ item.price }}
-                </div>
-                <svg
-                  class="delete-btn"
-                  @click="deleteItemBasket(item)"
-                  :style="{
-                    cursor: 'pointer',
-                    position: 'absolute',
-                    right: '0px',
-                    top: '-8px',
-                  }"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 32 32"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+          <transition-group name="fade" mode="out-in">
+            <div
+              key="first"
+              v-if="basket.items.length > 0"
+              class="items-wrapper"
+            >
+              <transition-group name="list" move-class="move" appear>
+                <div
+                  v-for="item of basket.items"
+                  :key="item.id"
+                  class="cart-item"
                 >
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="31"
-                    height="31"
-                    rx="7.5"
-                    fill="white"
-                    stroke="#DBDBDB"
+                  <img
+                    :style="{
+                      position: 'absolute',
+                      left: '0',
+                      padding: '10px',
+                    }"
+                    width="100"
+                    height="100%"
+                    :src="item.img"
+                    alt="Cart item"
                   />
-                  <path
-                    d="M20.0799 18.6155L17.6311 16.1667L20.0798 13.718C21.0241 12.7738 19.5596 11.3093 18.6154 12.2536L16.1667 14.7023L13.7179 12.2535C12.7738 11.3095 11.3095 12.7738 12.2535 13.7179L14.7023 16.1667L12.2536 18.6154C11.3093 19.5596 12.7738 21.0241 13.718 20.0798L16.1667 17.6311L18.6155 20.0799C19.5597 21.0241 21.0241 19.5597 20.0799 18.6155Z"
-                    fill="#B5B5B5"
-                  />
-                </svg>
+                  <div :style="{ marginLeft: '100px' }">
+                    <p>
+                      {{ item.name }}
+                    </p>
+                    <p :style="{ marginTop: '10px', fontWeight: '600' }">
+                      {{ item.price }} руб.
+                    </p>
+                  </div>
+                  <svg
+                    class="delete-btn"
+                    @click="deleteItemBasket(item)"
+                    :style="{
+                      cursor: 'pointer',
+                      position: 'absolute',
+                      right: '0px',
+                      top: '-8px',
+                    }"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="0.5"
+                      y="0.5"
+                      width="31"
+                      height="31"
+                      rx="7.5"
+                      fill="white"
+                      stroke="#DBDBDB"
+                    />
+                    <path
+                      d="M20.0799 18.6155L17.6311 16.1667L20.0798 13.718C21.0241 12.7738 19.5596 11.3093 18.6154 12.2536L16.1667 14.7023L13.7179 12.2535C12.7738 11.3095 11.3095 12.7738 12.2535 13.7179L14.7023 16.1667L12.2536 18.6154C11.3093 19.5596 12.7738 21.0241 13.718 20.0798L16.1667 17.6311L18.6155 20.0799C19.5597 21.0241 21.0241 19.5597 20.0799 18.6155Z"
+                      fill="#B5B5B5"
+                    />
+                  </svg>
+                </div>
+              </transition-group>
+              <div class="order-wrapper">
+                <div
+                  :style="{ display: 'flex', justifyContent: 'space-between' }"
+                >
+                  <p>Итого:</p>
+                  <p>{{ curPrice }}</p>
+                </div>
+                <div
+                        :style="{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: '20px',
+                  }"
+                >
+                  <p>Скидка 5%:</p>
+                  <p>{{ discount }}</p>
+                </div>
+                <div
+                        :style="{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: '20px',
+                  }"
+                >
+                  <p>С учётом скидки</p>
+                  <p>{{ withDiscount }}</p>
+                </div>
+                <button class="btn order-btn" @click="createOrder">
+                  <transition-group name="fade">
+                    <div
+                      key="first"
+                      v-if="!loader.show"
+                      :style="{ display: 'flex', alignItems: 'center' }"
+                    >
+                      <p>Оформить заказ</p>
+                      <svg
+                        width="16"
+                        height="14"
+                        viewBox="0 0 16 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1 7H14.7143"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M8.71436 1L14.7144 7L8.71436 13"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <Loader key="second" v-else />
+                  </transition-group>
+                </button>
               </div>
-            </transition-group>
-            <div class="order-wrapper">
-              <div
-                :style="{ display: 'flex', justifyContent: 'space-between' }"
-              >
-                <p>Итого:</p>
-                <p>{{ curPrice }}</p>
-              </div>
-              <div
-                :style="{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginTop: '20px',
-                }"
-              >
-                <p>Скидка 5%:</p>
-                <p>{{ curPrice * 0.05 }}</p>
-              </div>
-              <button class="btn order-btn">
-                <p>Оформить заказ</p>
+            </div>
+            <div
+              key="second"
+              v-else-if="successfullyOrder"
+              class="successfully-order"
+            >
+              <img height="120" width="83" src="../../assets/order.png" />
+              <h3>Заказ оформлен!</h3>
+              <p class="order-descr">
+                Ваш заказ скоро будет передан курьерской доставке
+              </p>
+              <button class="btn" @click="closeCart($event, true)">
                 <svg
+                  :style="{ marginRight: '20px' }"
                   width="16"
                   height="14"
                   viewBox="0 0 16 14"
@@ -80,62 +149,63 @@
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M1 7H14.7143"
+                    d="M14.7144 7L1.00007 7"
                     stroke="white"
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                   <path
-                    d="M8.71436 1L14.7144 7L8.71436 13"
+                    d="M7 13L1 7L7 1"
                     stroke="white"
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                 </svg>
+                <p>Вернуться назад</p>
               </button>
             </div>
-          </div>
-          <div class="cart-empty-wrapper" v-else>
-            <div
-              class="animated"
-              :style="{ display: 'flex', justifyContent: 'center' }"
-            >
-              <img src="../../assets/emptyBasket.png" />
-            </div>
-            <h3 class="cart-empty-title">Корзина пустая</h3>
-            <p class="cart-empty-description">Добавьте хотя бы одну пару</p>
-            <p class="cart-empty-description">
-              кроссовок, чтобы сделать заказ.
-            </p>
-            <button class="btn" @click="closeCart($event, true)">
-              <svg
-                :style="{ marginRight: '20px' }"
-                width="16"
-                height="14"
-                viewBox="0 0 16 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <div key="third" class="cart-empty-wrapper" v-else>
+              <div
+                class="animated"
+                :style="{ display: 'flex', justifyContent: 'center' }"
               >
-                <path
-                  d="M14.7144 7L1.00007 7"
-                  stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M7 13L1 7L7 1"
-                  stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <p>Вернуться назад</p>
-            </button>
-          </div>
+                <img src="../../assets/emptyBasket.png" />
+              </div>
+              <h3 class="cart-empty-title">Корзина пустая</h3>
+              <p class="cart-empty-description">Добавьте хотя бы одну пару</p>
+              <p class="cart-empty-description">
+                кроссовок, чтобы сделать заказ.
+              </p>
+              <button class="btn" @click="closeCart($event, true)">
+                <svg
+                  :style="{ marginRight: '20px' }"
+                  width="16"
+                  height="14"
+                  viewBox="0 0 16 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M14.7144 7L1.00007 7"
+                    stroke="white"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M7 13L1 7L7 1"
+                    stroke="white"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <p>Вернуться назад</p>
+              </button>
+            </div>
+          </transition-group>
         </div>
       </transition>
     </div>
@@ -144,13 +214,45 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+const Loader = () => import("./Loader");
 export default {
   name: "Basket",
   data: () => ({
     showCart: false,
+    successfullyOrder: false,
   }),
+  watch: {
+    successfullyOrder() {
+      setTimeout(() => {
+        this.successfullyOrder = false;
+      }, 10000);
+    },
+  },
   methods: {
-    ...mapMutations(["setShowBasket", "deleteItemBasket"]),
+    ...mapMutations([
+      "setShowBasket",
+      "clearBasket",
+      "deleteItemBasket",
+      "setLoader",
+    ]),
+    createOrder() {
+      this.setLoader({ show: true });
+      setTimeout(() => {
+        this.$axios
+          .post("order", {
+            items: this.basket.items.map((item) => ({
+              ...item,
+              price: item.price * 0.95,
+            })),
+          })
+          .then((res) => {
+            this.clearBasket();
+            this.setLoader({ show: false });
+            this.successfullyOrder = true;
+            console.log(res);
+          });
+      }, 1500);
+    },
     closeCart({ target }, flag = false) {
       if (target.classList.contains("cart-wrapper") || flag) {
         this.showCart = false;
@@ -161,12 +263,21 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["basket"]),
+    ...mapGetters(["basket", "loader"]),
+    discount(){
+      return (this.curPrice * 0.05).toFixed(0)
+    },
+    withDiscount(){
+      return (this.curPrice * 0.95).toFixed(0)
+    },
     curPrice() {
       let init = 0;
       let reducer = (acc, item) => acc + item.price;
       return this.basket.items.reduce(reducer, init).toFixed(0);
     },
+  },
+  components: {
+    Loader,
   },
   mounted() {
     this.showCart = true;
@@ -197,6 +308,7 @@ export default {
   &-title {
     padding-bottom: 15px;
     border-bottom: 0.5px solid rgba(128, 128, 128, 0.3);
+    font-size: $second-font;
   }
 }
 .cart-empty-wrapper {
@@ -210,14 +322,14 @@ export default {
 .cart-empty-title {
   font-weight: 600;
   font-size: $second-font;
-  line-height: 27px;
+  color: $second-color;
   text-align: center;
   margin: 20px 0 10px;
 }
 .cart-empty-description {
   font-size: $third-font;
   line-height: 24px;
-  opacity: 0.4;
+  opacity: 0.5;
   text-align: center;
   padding: 0 20px;
 }
@@ -264,11 +376,35 @@ rect {
 }
 .order-btn {
   width: 100%;
+  position: relative;
 }
 .order-btn p {
   margin-right: 15px;
 }
-
+.successfully-order {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  img {
+    margin-bottom: 30px;
+  }
+  h3 {
+    margin-bottom: 9px;
+    color: $second-text;
+    font-weight: 600;
+    font-size: $second-font;
+  }
+  .order-descr {
+    text-align: center;
+    opacity: 0.5;
+    font-weight: 400;
+    font-size: $third-font;
+  }
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;

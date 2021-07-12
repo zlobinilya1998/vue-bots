@@ -8,7 +8,7 @@
       <swiper-slide>
         <div class="slide-item first">
           <div :style="{ padding: '16px 20px' }">
-            <img src="../assets/swiperLogo.png" />
+            <img src="@/assets/swiperLogo.png" />
             <div :style="{ margin: '32px 0 0 41px' }">
               <p :style="{ fontWeight: '800' }">Stan Smith,</p>
               <p :style="{ fontWeight: '800' }">Forever!</p>
@@ -35,7 +35,7 @@
           </div>
           <img
             :style="{ objectFit: 'contain' }"
-            src="../assets/swiperBackground.png"
+            src="@/assets/swiperBackground.png"
             alt="img"
           />
         </div>
@@ -103,7 +103,7 @@
       <transition-group name="fade" appear>
         <div key="first" class="sneakers" v-if="items && !search">
           <div
-            v-for="(item, index) of items"
+            v-for="item of items"
             :key="item.id"
             class="sneakers-item"
             :class="{ liked: item.liked }"
@@ -112,7 +112,7 @@
               <div
                 key="first"
                 v-if="item.liked"
-                @click="likeItem(index)"
+                @click="likeItem(item._id)"
                 :style="{
                   position: 'absolute',
                   left: '30px',
@@ -137,7 +137,7 @@
               <div
                 key="second"
                 v-else
-                @click="likeItem(index)"
+                @click="likeItem(item._id)"
                 :style="{
                   position: 'absolute',
                   left: '30px',
@@ -173,6 +173,7 @@
               <img
                 width="100%"
                 height="100%"
+                :src="item.img"
                 :style="{ objectFit: 'contain', maxWidth: '100%' }"
               />
             </div>
@@ -198,7 +199,7 @@
                       (basketItem) => basketItem.id === item.id
                     )
                   "
-                  @click="addItemToCart(index)"
+                  @click="addItemToCart(item._id)"
                 >
                   <svg
                     width="32"
@@ -316,7 +317,7 @@
         </div>
         <div key="third" class="sneakers" v-else-if="search">
           <div
-            v-for="(item, index) of filteredItems"
+            v-for="item of filteredItems"
             :key="item.id"
             class="sneakers-item"
             :class="{ liked: item.liked }"
@@ -325,7 +326,7 @@
               <div
                 key="first"
                 v-if="item.liked"
-                @click="likeItem(index)"
+                @click="likeItem(item._id)"
                 :style="{
                   position: 'absolute',
                   left: '30px',
@@ -350,7 +351,7 @@
               <div
                 key="second"
                 v-else
-                @click="likeItem(index)"
+                @click="likeItem(item._id)"
                 :style="{
                   position: 'absolute',
                   left: '30px',
@@ -386,6 +387,7 @@
               <img
                 width="100%"
                 height="100%"
+                :src="item.img"
                 :style="{ objectFit: 'contain', maxWidth: '100%' }"
               />
             </div>
@@ -411,7 +413,7 @@
                       (basketItem) => basketItem.id === item.id
                     )
                   "
-                  @click="addItemToCart(index)"
+                  @click="addItemToCart(item._id)"
                 >
                   <svg
                     width="32"
@@ -624,11 +626,29 @@ export default {
     scrollTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    addItemToCart(index) {
-      this.setItemBasket(this.items[index]);
+    addItemToCart(id) {
+      if (this.basket.items.find((item) => item._id === id)) return;
+      this.setItemBasket(this.items.find((item) => item._id === id));
     },
-    likeItem(index) {
-      this.items[index].liked = !this.items[index].liked;
+    async likeItem(id) {
+      let item = this.items.find((item) => item._id === id);
+      if (!item.liked) {
+        this.$axios
+          .post("sneakers/like", { id })
+          .then((res) => {
+            console.log(res, "liked");
+            item.liked = true;
+          })
+          .catch((e) => console.log(e));
+      } else {
+        this.$axios
+          .post("sneakers/unlike", { id })
+          .then((res) => {
+            console.log(res, "unliked");
+            item.liked = false;
+          })
+          .catch((e) => console.log(e));
+      }
     },
   },
   computed: {
@@ -649,7 +669,13 @@ export default {
     if (!this.items) {
       setTimeout(() => {
         this.$axios.get("/sneakers").then((res) => {
-          this.setItems(res.data.map((item) => ({ ...item, liked: false })));
+          this.setItems(
+            res.data.map((item, index) => ({
+              ...item,
+              liked: this.user.favorites.includes(item._id),
+              img: require(`@/assets/${index + 1}.png`),
+            }))
+          );
         });
       }, 1500);
     }
@@ -701,12 +727,12 @@ export default {
   }
 
   &.second {
-    background-image: url("../assets/slide2.jpg");
+    background-image: url("../../assets/slide2.jpg");
     background-size: cover;
   }
 
   &.third {
-    background-image: url("../assets/slide3.jpg");
+    background-image: url("../../assets/slide3.jpg");
     background-position: right 35% bottom 40%;
     background-size: cover;
   }

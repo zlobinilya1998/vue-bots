@@ -1,9 +1,9 @@
 const {Schema,model,ObjectId} = require('mongoose')
 
 const Order = new Schema({
-    date: {type: String,required:true},
+    date: {type: Date,default:Date.now()},
     price: {type: Number,required:true},
-    items: [{type:Schema.Types.ObjectID,ref:'Sneaker',required:true}],
+    items: [{type:ObjectId,ref:'Sneaker',required:true}],
     user: {type:String,required:true},
 })
 

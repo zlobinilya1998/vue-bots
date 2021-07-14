@@ -93,15 +93,15 @@
             fill="#7EC3FF"
           />
         </svg>
-        <p class="user-email">{{ user.email }}</p>
+        <p class="user-email">{{ user.login }}</p>
         <transition name="fade">
           <div
             v-if="showToolTip"
             class="profile-tooltip"
             @mouseleave="showToolTip = false"
           >
-            <p>First</p>
-            <p>Настройки</p>
+            <p>Помощь</p>
+            <p @click="$router.push({ name: 'settings' })">Настройки</p>
             <p @click="logout">Выход</p>
           </div>
         </transition>
@@ -115,9 +115,9 @@ import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "Menu",
-  props:{
-    menuShow:{
-      default:undefined
+  props: {
+    menuShow: {
+      default: undefined,
     },
   },
   data: () => ({
@@ -130,7 +130,7 @@ export default {
     logout() {
       this.setUser(null);
       sessionStorage.clear();
-      this.$router.push({name:'login'})
+      this.$router.push({ name: "login" });
     },
     tooltipShow() {
       this.showToolTip = !this.showToolTip;
@@ -162,7 +162,7 @@ export default {
       );
     },
   },
-};
+ };
 </script>
 
 <style scoped lang="scss">
@@ -234,7 +234,6 @@ export default {
   position: absolute;
   right: 0;
   top: 55px;
-  width: 100%;
   background: $main-color;
   border-radius: 10px;
   padding: 10px;

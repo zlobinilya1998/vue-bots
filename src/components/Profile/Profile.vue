@@ -1,5 +1,5 @@
 <template>
-  <div class="page" :style="{padding:'0 20px'}">
+  <div class="page">
     <div
       :style="{
         display: 'flex',

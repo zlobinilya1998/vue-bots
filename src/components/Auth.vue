@@ -276,7 +276,7 @@
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
 import { mapMutations, mapGetters } from "vuex";
-const Loader = () => import("./Modals/Loader");
+const Loader = () => import("./Modals/Loader/Loader");
 export default {
   name: "Auth",
   data: () => ({
@@ -364,24 +364,15 @@ export default {
       this.$axios
         .post("register", this.regForm)
         .then((res) => {
-          this.setNotification({
-            show: true,
-            text: res.data.message,
-            type: res.data.type,
-          });
+          this.setUser(res.data.user);
+          this.setLoader({ show: false });
+          sessionStorage.setItem(`token`, JSON.stringify(res.data.user.token));
           setTimeout(() => {
-            this.setUser(res.data.user);
-            this.setLoader({ show: false });
-            this.$router.push({name:"shop"})
+            this.$router.push({ name: "shop" });
           }, 2500);
         })
         .catch((e) => {
           this.setLoader({ show: false });
-          this.setNotification({
-            show: true,
-            text: "Что-то пошло не так!",
-            type: "danger",
-          });
           console.log(e);
         });
     },
@@ -397,8 +388,8 @@ export default {
         setTimeout(() => {
           this.setLoader({ show: false });
           this.setUser(res.data.user);
-          sessionStorage.setItem(`token`,JSON.stringify(res.data.user.token));
-          this.$router.push({name:"shop"})
+          sessionStorage.setItem(`token`, JSON.stringify(res.data.user.token));
+          this.$router.push({ name: "shop" });
         }, 2500);
       });
     },

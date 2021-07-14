@@ -11,87 +11,35 @@
               class="items-wrapper"
             >
               <transition-group name="list" move-class="move" appear>
-                <div
-                  v-for="item of basket.items"
-                  :key="item.id"
-                  class="cart-item"
-                >
-                  <img
-                    :style="{
-                      position: 'absolute',
-                      left: '0',
-                      padding: '10px',
-                    }"
-                    width="100"
-                    height="100%"
-                    :src="item.img"
-                    alt="Cart item"
-                  />
-                  <div :style="{ marginLeft: '100px' }">
-                    <p>
-                      {{ item.name }}
-                    </p>
-                    <p :style="{ marginTop: '10px', fontWeight: '600' }">
-                      {{ item.price }} руб.
-                    </p>
-                  </div>
-                  <svg
-                    class="delete-btn"
-                    @click="deleteItemBasket(item)"
-                    :style="{
-                      cursor: 'pointer',
-                      position: 'absolute',
-                      right: '0px',
-                      top: '-8px',
-                    }"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.5"
-                      y="0.5"
-                      width="31"
-                      height="31"
-                      rx="7.5"
-                      fill="white"
-                      stroke="#DBDBDB"
-                    />
-                    <path
-                      d="M20.0799 18.6155L17.6311 16.1667L20.0798 13.718C21.0241 12.7738 19.5596 11.3093 18.6154 12.2536L16.1667 14.7023L13.7179 12.2535C12.7738 11.3095 11.3095 12.7738 12.2535 13.7179L14.7023 16.1667L12.2536 18.6154C11.3093 19.5596 12.7738 21.0241 13.718 20.0798L16.1667 17.6311L18.6155 20.0799C19.5597 21.0241 21.0241 19.5597 20.0799 18.6155Z"
-                      fill="#B5B5B5"
-                    />
-                  </svg>
-                </div>
+                <Item @deleteItemBasket="deleteItemBasket" :item="item" v-for="item of basket.items" :key="item.id"  />
               </transition-group>
               <div class="order-wrapper">
                 <div
                   :style="{ display: 'flex', justifyContent: 'space-between' }"
                 >
                   <p>Итого:</p>
-                  <p>{{ curPrice }}</p>
+                  <p>{{ curPrice }} руб.</p>
                 </div>
                 <div
-                        :style="{
+                  :style="{
                     display: 'flex',
                     justifyContent: 'space-between',
                     marginTop: '20px',
                   }"
                 >
                   <p>Скидка 5%:</p>
-                  <p>{{ discount }}</p>
+                  <p :style="{color:'#90c447'}">{{ discount }} руб.</p>
                 </div>
                 <div
-                        :style="{
+                  :style="{
                     display: 'flex',
                     justifyContent: 'space-between',
+                    alignItems:'center',
                     marginTop: '20px',
                   }"
                 >
                   <p>С учётом скидки</p>
-                  <p>{{ withDiscount }}</p>
+                  <p class="total-price">{{ withDiscount }} руб.</p>
                 </div>
                 <button class="btn order-btn" @click="createOrder">
                   <transition-group name="fade">
@@ -134,7 +82,7 @@
               v-else-if="successfullyOrder"
               class="successfully-order"
             >
-              <img height="120" width="83" src="../../assets/order.png" />
+              <img height="120" width="83" src="../../../assets/order.png" />
               <h3>Заказ оформлен!</h3>
               <p class="order-descr">
                 Ваш заказ скоро будет передан курьерской доставке
@@ -171,7 +119,7 @@
                 class="animated"
                 :style="{ display: 'flex', justifyContent: 'center' }"
               >
-                <img src="../../assets/emptyBasket.png" />
+                <img src="../../../assets/emptyBasket.png" />
               </div>
               <h3 class="cart-empty-title">Корзина пустая</h3>
               <p class="cart-empty-description">Добавьте хотя бы одну пару</p>
@@ -214,7 +162,8 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-const Loader = () => import("./Loader");
+const Item = () => import("./Item");
+const Loader = () => import("../Loader/Loader");
 export default {
   name: "Basket",
   data: () => ({
@@ -264,11 +213,11 @@ export default {
   },
   computed: {
     ...mapGetters(["basket", "loader"]),
-    discount(){
-      return (this.curPrice * 0.05).toFixed(0)
+    discount() {
+      return (this.curPrice * 0.05).toFixed(0);
     },
-    withDiscount(){
-      return (this.curPrice * 0.95).toFixed(0)
+    withDiscount() {
+      return (this.curPrice * 0.95).toFixed(0);
     },
     curPrice() {
       let init = 0;
@@ -278,6 +227,7 @@ export default {
   },
   components: {
     Loader,
+    Item,
   },
   mounted() {
     this.showCart = true;
@@ -286,7 +236,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "./src/scss/style";
+@import "@/scss/style";
 .cart-wrapper {
   position: fixed;
   left: 0;
@@ -343,30 +293,7 @@ export default {
   height: 475px;
   overflow-y: scroll;
 }
-.cart-item {
-  width: 100%;
-  height: 100px;
-  background: $third-color;
-  border: 1px solid #f3f3f3;
-  border-radius: 20px;
-  margin: 20px 0;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  transition: all 0.4s;
-  cursor: pointer;
-}
-.delete-btn path,
-rect {
-  transition: all 0.4s;
-}
-.delete-btn:hover path {
-  fill: red;
-}
-.delete-btn:hover rect {
-  stroke: red;
-}
+
 .order-wrapper {
   position: absolute;
   width: 325px;
@@ -404,6 +331,13 @@ rect {
     font-weight: 400;
     font-size: $third-font;
   }
+}
+.total-price {
+  font-size: $third-font;
+  color: $third-text;
+  background: $main-color;
+  padding: 5px;
+  border-radius: 10px;
 }
 .fade-enter-active,
 .fade-leave-active {

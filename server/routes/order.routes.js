@@ -9,7 +9,6 @@ router.post("/", async (req, res) => {
   const { items } = req.body;
   try {
     const order = new Order({
-      date: new Date().toString(),
       price: items.reduce(reducer, initialValue),
       items,
       user: login

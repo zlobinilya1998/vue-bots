@@ -54,7 +54,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Loader from "../Modals/Loader";
+import Loader from "../Modals/Loader/Loader";
 export default {
   name: "Purchases",
   data: () => ({

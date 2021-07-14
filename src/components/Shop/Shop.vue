@@ -670,10 +670,9 @@ export default {
       setTimeout(() => {
         this.$axios.get("/sneakers").then((res) => {
           this.setItems(
-            res.data.map((item, index) => ({
+            res.data.map(item=> ({
               ...item,
               liked: this.user.favorites.includes(item._id),
-              img: require(`@/assets/${index + 1}.png`),
             }))
           );
         });

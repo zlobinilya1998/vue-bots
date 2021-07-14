@@ -7,8 +7,8 @@
 
 <script>
 import { mapGetters } from "vuex";
-const Notification = () => import("./Notification");
-const Basket = () => import("./Basket");
+const Notification = () => import("./Notification/Notification");
+const Basket = () => import("./Basket/Basket");
 export default {
   name: "Modals",
   components: {

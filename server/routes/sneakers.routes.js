@@ -5,12 +5,6 @@ const Sneaker = require("../models/Sneaker");
 
 router.get("/", async (req, res) => {
   let sneakers = await Sneaker.find();
-  sneakers = sneakers.map((sneaker) => {
-    return {
-      ...sneaker._doc,
-      img: `localhost:${process.env.PORT}/${sneaker.img}`,
-    };
-  });
   res.send(sneakers);
 });
 

@@ -1,8 +1,15 @@
 <template>
-  <div class="cart-item" @mouseenter="hover = true" @mouseleave="hover = false">
+  <div
+    class="cart-item"
+    @mouseenter="hover = true"
+    @mouseleave="hover = false"
+    ref="item"
+  >
     <transition name="fade">
       <div v-if="hover" class="item-bg">
-          <div v-if="hover" class="delete-btn" @click="deleteItemBasket(item)">Убрать</div>
+        <div v-if="hover" class="delete-btn" @click="deleteItemBasket(item)">
+          Убрать
+        </div>
       </div>
     </transition>
     <img
@@ -36,7 +43,10 @@ export default {
   }),
   methods: {
     deleteItemBasket(item) {
-      this.$emit("deleteItemBasket", item);
+      this.$refs.item.classList.add("deleted");
+      setTimeout(() => {
+        this.$emit("deleteItemBasket", item);
+      }, 250);
     },
   },
 };
@@ -57,8 +67,11 @@ export default {
   position: relative;
   transition: all 0.4s;
   cursor: pointer;
+  &.deleted {
+    opacity: 0;
+  }
   img {
-    transition: .5s;
+    transition: 0.5s;
   }
   &:hover img {
     transform: scale(1.05);

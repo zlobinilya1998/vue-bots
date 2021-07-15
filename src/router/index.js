@@ -14,7 +14,8 @@ const Favorite = () => import("@/components/Profile/Favorite");
 const Personal = () => import("@/components/Profile/Personal");
 const Purchases = () => import("@/components/Profile/Purchases");
 const Score = () => import("@/components/Profile/Score");
-const Settings = () => import("@/components/Profile/Settings")
+const Settings = () => import("@/components/Profile/Settings");
+const Administration = () => import("@/components/Profile/Administration");
 
 Vue.use(VueRouter);
 
@@ -38,7 +39,11 @@ const routes = [
           { path: "purchases", name: "purchases", component: Purchases },
           { path: "favorite", name: "favorite", component: Favorite },
           { path: "settings", name: "settings", component: Settings },
-
+          {
+            path: "administration",
+            name: "administration",
+            component: Administration,
+          },
         ],
       },
     ],

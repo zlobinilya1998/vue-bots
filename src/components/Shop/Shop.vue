@@ -100,7 +100,7 @@
           />
         </div>
       </div>
-      <transition-group name="fade" appear>
+      <transition-group name="fade">
         <div key="first" class="sneakers" v-if="items && !search">
           <div
             v-for="item of items"

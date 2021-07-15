@@ -6,6 +6,8 @@ const User = new Schema({
     email: {type:String,required:true,unique:true},
     favorites: [{type:ObjectId,ref:'Sneaker'}],
     phone: {type: String,default:null},
+    photo: {type: String,default:null},
+    roles: [{type:String}]
 })
 
 module.exports = model('User',User);

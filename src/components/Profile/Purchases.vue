@@ -1,26 +1,15 @@
 <template>
   <transition-group name="fade">
     <div key="first" class="wrapper" v-if="orders.length">
-      <div class="order" v-for="(order, index) in orders" :key="order._id">
-        <div
-                :style="{
-          position: 'absolute',
-          width: '100%',
-          height: '15px',
-          left: '0',
-          top: '0',
-          background: '#7EC3FF',
-          borderRadius: '10px 10px 0 0',
-        }"
-        ></div>
+      <div class="order" v-for="(order, index) in itemsToShow" :key="order._id">
         <div class="order-item-wrapper">
           <div
-                  class="order-item"
-                  :style="{ border: item.hover ? 'none' : '1px solid #9dd458' }"
-                  @mouseenter="item.hover = true"
-                  @mouseleave="item.hover = false"
-                  v-for="item in order.items"
-                  :key="item._id"
+            class="order-item"
+            :style="{ border: item.hover ? 'none' : '1px solid #9dd458' }"
+            @mouseenter="item.hover = true"
+            @mouseleave="item.hover = false"
+            v-for="item in order.items"
+            :key="item._id"
           >
             <transition name="fade">
               <div v-if="item.hover" class="order-shadow">
@@ -28,10 +17,10 @@
               </div>
             </transition>
             <img
-                    :style="{ objectFit: 'contain' }"
-                    width="100%"
-                    height="100%"
-                    :src="item.img"
+              :style="{ objectFit: 'contain' }"
+              width="100%"
+              height="100%"
+              :src="item.img"
             />
           </div>
         </div>
@@ -65,29 +54,18 @@ export default {
     Loader,
   },
   mounted() {
-    setTimeout(() => {
-      this.$axios.get("/purchases").then((res) => {
-        this.orders = res.data.map((order) => ({
-          ...order,
-          date: new Date(order.date).toLocaleDateString("ru-Ru", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          }),
-        }));
-        this.orders = this.orders.map((order) => {
-          return {
-            ...order,
-            items: order.items.map((item) => {
-              return {
-                ...this.items.find((find) => find._id === item),
-                hover: false,
-              };
-            }),
-          };
+    this.$axios
+      .get("/purchases")
+      .then((res) => {
+        this.orders = res.data.map(order=>{
+          return {...order,items:order.items.map(item=>{
+            return {...item,hover:false}
+            })}
         });
+      })
+      .catch((e) => {
+        console.log(e);
       });
-    }, 1500);
   },
   methods: {
     orderPrice(arr) {
@@ -95,9 +73,24 @@ export default {
       let reducer = (acc, curVal) => acc + curVal.price;
       return arr.reduce(reducer, init);
     },
+    parseData(str) {
+      return new Date(str).toLocaleDateString("ru-Ru", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+    },
   },
   computed: {
     ...mapGetters(["user", "items"]),
+    itemsToShow() {
+      return this.orders.map((order) => {
+        return {
+          ...order,
+          date: this.parseData(order.createdAt),
+        };
+      });
+    },
   },
 };
 </script>
@@ -111,10 +104,8 @@ export default {
     padding: 30px 20px 20px;
     background: $third-color;
     margin: 10px;
-    border-radius: 10px;
     position: relative;
     &-shadow {
-      border-radius: 10px;
       position: absolute;
       left: 0;
       top: 0;
@@ -166,7 +157,6 @@ export default {
       width: 80px;
       margin: 5px;
       border: 1px solid $second-color;
-      border-radius: 10px;
       padding: 5px;
       position: relative;
       cursor: pointer;

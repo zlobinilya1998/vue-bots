@@ -1,20 +1,23 @@
 <template>
   <div class="container">
-    <Header />
+    <Header/>
     <div class="content">
       <transition name="router" appear mode="out-in">
         <router-view />
       </transition>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 const Header = () => import("../components/Header/Header");
+const Footer = () => import("../components/Footer/Footer");
 export default {
   name: "Main",
   components: {
     Header,
+    Footer,
   },
 };
 </script>
@@ -26,7 +29,6 @@ export default {
   margin: 0 auto;
   background: $third-color;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04);
-  border-radius: 20px;
   transition: all 0.3s;
 }
 .content {

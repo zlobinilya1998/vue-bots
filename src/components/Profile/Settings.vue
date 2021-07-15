@@ -1,6 +1,8 @@
 <template>
-  <div class="settings">
+  <div v-if="user" class="settings">
     <h3 class="settings-title">Настройка профиля</h3>
+    <input type="file" ref="file" @change="selectFile" />
+    <button @click="uploadImg">Отправить</button>
     <div
       :style="{ height: height.password ? `${height.password}px` : '20px' }"
       class="settings-item"
@@ -24,12 +26,9 @@
       :style="{ height: height.email ? `${height.email}px` : '20px' }"
       class="settings-item"
     >
-      <div
-        v-if="!showInput.email"
-        class="left"
-      >
+      <div v-if="!showInput.email" class="left">
         <p class="settings-item-title">Электронная почта</p>
-        <p class="user-email">{{ user.email }}</p>
+        <p v-if="user.email" class="user-email">{{ user.email }}</p>
       </div>
       <div v-else class="left">
         <div>
@@ -66,8 +65,12 @@
       class="settings-item"
     >
       <div class="left">
-        <p class="settings-item-title" v-if="!showInput.phone">Номер телефона</p>
-        <p v-if="user.phone && !showInput.phone" class="user-phone">{{ user.phone }}</p>
+        <p class="settings-item-title" v-if="!showInput.phone">
+          Номер телефона
+        </p>
+        <p v-if="user.phone || !showInput.phone" class="user-phone">
+          {{ user.phone }}
+        </p>
         <div v-else>
           <p>Новый номер</p>
           <div :style="{ position: 'relative' }">
@@ -94,27 +97,16 @@
         </div>
       </div>
       <div class="right">
-        <p class="change" @click="showPhone">{{ user.phone ? 'Изменить':'Привязать'}}</p>
+        <p class="change" @click="showPhone">
+          {{ user.phone ? "Изменить" : "Привязать" }}
+        </p>
       </div>
     </div>
-    <div
-      :style="{
-        position: 'absolute',
-        bottom: '0',
-        height: '50px',
-        right:'0'
-      }"
-    >
-      <div  class="btn delete-btn">
-        <Loader v-if="loading" w="30" h="30" />
-        <p v-else @click="deleteUser">Удалить профиль</p>
-      </div>
-    </div>
+    <p class="no-phone" v-if="!user.phone">У вас еще не привязан телефон</p>
   </div>
 </template>
 
 <script>
-const Loader = () => import("@/components/Modals/Loader/Loader");
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
@@ -138,15 +130,28 @@ export default {
       phone: false,
     },
     loading: false,
+    file: null,
   }),
-  components: {
-    Loader,
-  },
   computed: {
     ...mapGetters(["user"]),
   },
   methods: {
     ...mapMutations(["setUser"]),
+    selectFile() {
+      this.file = this.$refs.file.files[0];
+    },
+    uploadImg() {
+      const formData = new FormData();
+      formData.append("file", this.file);
+      this.$axios
+        .post("upload", formData)
+        .then((res) => {
+          this.setUser(res.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     showPassword() {
       if (this.showInput.password) {
         this.height.password = null;
@@ -200,22 +205,6 @@ export default {
           console.log(e);
         });
     },
-    deleteUser() {
-      this.loading = true;
-      this.$axios
-        .post("user/delete")
-        .then(() => {
-          setTimeout(() => {
-            this.loading = false;
-            sessionStorage.clear();
-            this.$router.push({ name: "login" });
-          }, 1500);
-        })
-        .catch((e) => {
-          console.log(e);
-          this.loading = false;
-        });
-    },
   },
 };
 </script>
@@ -226,6 +215,13 @@ export default {
   position: relative;
   height: 100%;
   padding-bottom: 80px;
+  &-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-top: 20px;
+    object-fit: cover;
+  }
   &-title {
     padding-bottom: 10px;
     border-bottom: 1px solid $five-color;
@@ -272,15 +268,10 @@ export default {
     }
   }
 }
-.delete-btn {
-  height: 100%;
-  width: 100%;
-  padding: 0 10px;
-  border-radius: 10px;
-  position: relative;
-  margin: 0;
-  background: $five-color;
-  font-size: $four-font;
+.no-phone {
+  margin: 10px 0 0 10px;
+  color: $third-text;
+
 }
 .input {
   background: $third-color;

@@ -39,11 +39,7 @@ const routes = [
           { path: "purchases", name: "purchases", component: Purchases },
           { path: "favorite", name: "favorite", component: Favorite },
           { path: "settings", name: "settings", component: Settings },
-          {
-            path: "administration",
-            name: "administration",
-            component: Administration,
-          },
+          { path: "administration", name: "administration", component: Administration },
         ],
       },
     ],

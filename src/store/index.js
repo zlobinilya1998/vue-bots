@@ -19,6 +19,10 @@ export default new Vuex.Store({
         text: null,
         type: "danger",
       },
+      tooltip:{
+        show:false,
+        item:null,
+      },
       loader: {
         show: false,
       },
@@ -41,11 +45,15 @@ export default new Vuex.Store({
     setLoader: ({ modals }, payload) => {
       modals.loader = payload;
     },
+    setTooltip:({modals}, payload) => {
+      modals.tooltip = payload
+    }
   },
   getters: {
     user: (state) => state.user,
     items: (state) => state.items,
     basket: (state) => state.basket,
+    modals:(state) => state.modals,
     loader: (state) => state.modals.loader,
     notification: (state) => state.modals.notification,
     purchases: (state) => state.purchases,

@@ -5,11 +5,9 @@
         <div class="order-item-wrapper">
           <div
             class="order-item"
-            :style="{ border: item.hover ? 'none' : '1px solid #9dd458' }"
-            @mouseenter="item.hover = true"
-            @mouseleave="item.hover = false"
             v-for="item in order.items"
             :key="item._id"
+            @click="setTooltip({show:true,item})"
           >
             <transition name="fade">
               <div v-if="item.hover" class="order-shadow">
@@ -42,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import Loader from "../Modals/Loader/Loader";
 export default {
   name: "Purchases",
@@ -59,7 +57,7 @@ export default {
       .then((res) => {
         this.orders = res.data.map(order=>{
           return {...order,items:order.items.map(item=>{
-            return {...item,hover:false}
+            return item;
             })}
         });
       })
@@ -68,6 +66,7 @@ export default {
       });
   },
   methods: {
+    ...mapMutations(['setTooltip']),
     orderPrice(arr) {
       let init = 0;
       let reducer = (acc, curVal) => acc + curVal.price;
@@ -153,10 +152,9 @@ export default {
       color: $third-text;
     }
     &-item {
-      height: 100px;
-      width: 80px;
+      height: 140px;
+      width: 100px;
       margin: 5px;
-      border: 1px solid $second-color;
       padding: 5px;
       position: relative;
       cursor: pointer;

@@ -175,6 +175,7 @@
                 height="100%"
                 :src="item.img"
                 :style="{ objectFit: 'contain', maxWidth: '100%' }"
+                @click="setTooltip({ show: true, item })"
               />
             </div>
             <p class="sneaker-name">{{ item.name }}</p>
@@ -622,6 +623,7 @@ export default {
       "setItemBasket",
       "deleteItemBasket",
       "setItems",
+      "setTooltip",
     ]),
     scrollTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -670,7 +672,7 @@ export default {
       setTimeout(() => {
         this.$axios.get("/sneakers").then((res) => {
           this.setItems(
-            res.data.map(item=> ({
+            res.data.map((item) => ({
               ...item,
               liked: this.user.favorites.includes(item._id),
             }))

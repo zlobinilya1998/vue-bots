@@ -7,7 +7,6 @@
             class="order-item"
             v-for="item in order.items"
             :key="item._id"
-            @click="setTooltip({show:true,item})"
           >
             <transition name="fade">
               <div v-if="item.hover" class="order-shadow">
@@ -40,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 import Loader from "../Modals/Loader/Loader";
 export default {
   name: "Purchases",
@@ -66,7 +65,6 @@ export default {
       });
   },
   methods: {
-    ...mapMutations(['setTooltip']),
     orderPrice(arr) {
       let init = 0;
       let reducer = (acc, curVal) => acc + curVal.price;

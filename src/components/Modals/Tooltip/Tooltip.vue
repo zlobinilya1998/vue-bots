@@ -3,7 +3,6 @@
     <div class="tooltip" ref="tooltip">
       <img class="img" :src="item.img" />
       <h4 class="name">{{ item.name }}</h4>
-      <p class="price">{{ item.price }} руб.</p>
       <svg
         @click="closeModal($event, true)"
         class="close"
@@ -92,14 +91,6 @@ export default {
   left: 50%;
   width: max-content;
   transform: translateX(-50%);
-}
-.price {
-  position: absolute;
-  right: 25px;
-  bottom: 20px;
-  font-size: $second-font;
-  color: $second-text;
-  font-weight: bolder;
 }
 .img {
   height: 280px;
